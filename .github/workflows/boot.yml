@@ -1,0 +1,25 @@
+name: Boot
+
+on:
+  workflow_dispatch:
+    inputs:
+      sleep-duration:
+        description: 'Sleep duration'
+        required: true
+        default: '15m'
+        type: string
+
+jobs:
+  boot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+          hostname: github-actions-1
+
+      - name: Sleep
+        env:
+          SLEEP_DURATION: ${{ inputs.sleep-duration }}
+        run: sleep "$SLEEP_DURATION"
