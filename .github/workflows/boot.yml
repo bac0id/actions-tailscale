@@ -3,10 +3,20 @@ name: Boot
 on:
   workflow_dispatch:
     inputs:
-      sleep-duration:
-        description: 'Sleep duration'
+      tailscale-hostname:
+        description: "Tailscale hostname"
         required: true
-        default: '15m'
+        default: "github-actions-1"
+        type: string
+      tailscale-args:
+        description: "Tailscale args"
+        required: true
+        default: "--ssh"
+        type: string
+      sleep-duration:
+        description: "Sleep duration"
+        required: true
+        default: "15m"
         type: string
 
 jobs:
@@ -17,7 +27,8 @@ jobs:
         uses: tailscale/github-action@v4
         with:
           authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
-          hostname: github-actions-1
+          hostname: ${{ inputs.tailscale-hostname }}
+          args:  ${{ inputs.tailscale-args }}
 
       - name: Install SSH key
         env:
